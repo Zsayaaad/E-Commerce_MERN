@@ -1,6 +1,6 @@
 import userModel from "../models/userModel";
 import bcrypt from "bcrypt";
-import { generateJWT } from "../security/jwt";
+import { generateJWT } from "../auth/jwt";
 
 interface RegisterParams {
   firstName: string;

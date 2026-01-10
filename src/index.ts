@@ -1,9 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import { seedInitialProducts } from "./services/productServices";
 import productsRoute from "./routes/productsRoute";
-const port = 3001;
+
+const port = 5000;
 const app = express();
 
 app.use(express.json());
