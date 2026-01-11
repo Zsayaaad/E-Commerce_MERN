@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const getSecretKey = () => {
   if (!process.env.JWT_SECRET) {
@@ -8,7 +8,11 @@ const getSecretKey = () => {
 };
 
 export const generateJWT = (payload: object) => {
+  // console.log("Payload: ", payload);
+
   return jwt.sign(payload, getSecretKey());
 };
 
-export const verifyToken = () => {};
+export const verifyToken = (token: string): JwtPayload | string => {
+  return jwt.verify(token, getSecretKey());
+};

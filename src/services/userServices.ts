@@ -27,13 +27,17 @@ export const register = async ({
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await userModel.create({
+  const newUser = await userModel.create({
     firstName,
     lastName,
     email,
     password: hashedPassword,
   });
-  return { data: generateJWT({ firstName, lastName, email }), statusCode: 200 };
+
+  return {
+    data: generateJWT({ userId: newUser._id }),
+    statusCode: 200,
+  };
 };
 
 export const login = async ({ email, password }: LoginParams) => {
@@ -48,9 +52,7 @@ export const login = async ({ email, password }: LoginParams) => {
   if (passwordMatch) {
     return {
       data: generateJWT({
-        email,
-        firstName: findUser.firstName,
-        lastName: findUser.lastName,
+        userId: findUser._id.toString(),
       }),
       statusCode: 200,
     };
