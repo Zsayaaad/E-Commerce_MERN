@@ -35,7 +35,7 @@ export const register = async ({
   });
 
   return {
-    data: generateJWT({ userId: newUser._id }),
+    data: generateJWT({ userId: newUser._id.toString() }),
     statusCode: 200,
   };
 };

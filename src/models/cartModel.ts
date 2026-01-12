@@ -1,7 +1,7 @@
 import { model, ObjectId, Schema } from "mongoose";
 import { IProduct } from "./productModel";
 
-interface ICartItem extends Document {
+interface ICartItem {
   quantity: number;
   product: IProduct;
   unitPrice: number;
@@ -9,7 +9,7 @@ interface ICartItem extends Document {
 
 export interface ICart extends Document {
   userId: ObjectId | string;
-  items: ICartItem;
+  items: ICartItem[];
   status: "active" | "completed";
   totalAmount: number;
 }

@@ -1,13 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { verifyToken } from "../auth/jwt";
-import { JwtPayload } from "jsonwebtoken";
-
-interface JwtPayloadCustom {
-  userId: string;
-}
-export interface AuthRequest extends Request {
-  user?: JwtPayloadCustom | string | JwtPayload;
-}
+import { AuthRequest } from "../types/extendedRequest";
 
 export const authMiddleware = (
   req: AuthRequest,
