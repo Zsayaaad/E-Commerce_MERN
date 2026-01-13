@@ -22,3 +22,7 @@ export interface RemoveItemFromCart {
   userId: string;
   productId: string;
 }
+
+export interface ClearCart {
+  userId: string;
+}

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addItemToCart,
+  clearCart,
   getActiveCart,
   removeItemfromCart,
   updateQuantityOfCartItem,
@@ -67,5 +68,13 @@ router.delete(
     res.status(response.statusCode).send(response.data);
   }
 );
+
+// Clear all items from cart
+router.delete("/", authMiddleware, async (req: AuthRequest, res) => {
+  const userId = req.user.userId;
+
+  const response = await clearCart({ userId });
+  res.status(response.statusCode).send(response.data);
+});
 
 export default router;

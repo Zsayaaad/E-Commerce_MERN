@@ -2,6 +2,7 @@ import { cartModel, ICartItem } from "../../models/cartModel";
 import productModel from "../../models/productModel";
 import {
   AddItemToCart,
+  ClearCart,
   CreateCart,
   GetActiveCart,
   RemoveItemFromCart,
@@ -170,4 +171,28 @@ export const removeItemfromCart = async ({
   const updatedCart = await cart.save();
 
   return { data: updatedCart, statusCode: 200 };
+};
+
+/**
+ * Name: clearCart
+ *
+ * Inputs:
+ * - userId: string
+ *
+ * Processes:
+ * - fetch cart from DB
+ * - assign empty array to cart.items
+ * - put zero to totalAmount
+ * - save cart
+ *
+ */
+export const clearCart = async ({ userId }: ClearCart) => {
+  const cart = await getActiveCart({ userId });
+
+  cart.items = [];
+  cart.totalAmount = 0;
+
+  const emptyCart = await cart.save();
+
+  return { data: emptyCart, statusCode: 200 };
 };
