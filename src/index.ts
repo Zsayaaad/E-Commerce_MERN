@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import userRoute from "./routes/userRoute";
 import cartRoute from "./routes/cartRoute";
 
-import { seedInitialProducts } from "./services/productServices";
+import { seedInitialProducts } from "./services/products/productServices";
 import productsRoute from "./routes/productsRoute";
 
 const port = 5000;

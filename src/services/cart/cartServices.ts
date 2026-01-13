@@ -1,19 +1,18 @@
-import { cartModel } from "../models/cartModel";
-import productModel from "../models/productModel";
-
-interface CreateCart {
-  userId: string;
-}
+import { cartModel, ICartItem } from "../../models/cartModel";
+import productModel from "../../models/productModel";
+import {
+  AddItemToCart,
+  CreateCart,
+  GetActiveCart,
+  RemoveItemFromCart,
+  UpdateQuantityOfCartItem,
+} from "./interfaces";
 
 const createCart = async ({ userId }: CreateCart) => {
   const cart = await cartModel.create({ userId });
 
   return cart;
 };
-
-interface GetActiveCart {
-  userId: string;
-}
 
 export const getActiveCart = async ({ userId }: GetActiveCart) => {
   let activeCart = await cartModel.findOne({ userId, status: "active" });
@@ -24,12 +23,6 @@ export const getActiveCart = async ({ userId }: GetActiveCart) => {
 
   return activeCart;
 };
-
-interface AddItemToCart {
-  userId: string;
-  productId: string;
-  quantity: number;
-}
 
 /**
  * Name: addItemToCart
@@ -106,13 +99,6 @@ export const addItemToCart = async ({
  * Outputs:
  * - updated cart object
  */
-
-interface UpdateQuantityOfCartItem {
-  userId: string;
-  productId: string;
-  quantity: number;
-}
-
 export const updateQuantityOfCartItem = async ({
   userId,
   productId,
@@ -135,7 +121,6 @@ export const updateQuantityOfCartItem = async ({
     return { data: "Insufficient stock for the product", statusCode: 400 };
   }
 
-  // cart.unitPrice * cart.quantity
   // Remove the old price of the item from totalAmount
   cart.totalAmount -= itemInCart.unitPrice * itemInCart.quantity;
   // Update the quantity & unitPrice
@@ -144,5 +129,45 @@ export const updateQuantityOfCartItem = async ({
   cart.totalAmount += itemInCart.unitPrice * quantity; // new price
 
   const updatedCart = await cart.save();
+  return { data: updatedCart, statusCode: 200 };
+};
+
+/**
+ * Name: removeItemFromCart
+ *
+ * Inputs:
+ * - userId: string
+ * - productId: string
+ *
+ * Processes:
+ * - fetch cart from DB
+ * - validate if item exists in cart
+ * - update totalAmount by removing the price of the item from it
+ * - remove the the item from items in the cart
+ */
+export const removeItemfromCart = async ({
+  userId,
+  productId,
+}: RemoveItemFromCart) => {
+  const cart = await getActiveCart({ userId });
+
+  const itemInCart: ICartItem | undefined = await cart.items.find((item) => {
+    return item.product.toString() === productId;
+  });
+
+  if (!itemInCart) {
+    return { data: "Item not found in cart", statusCode: 404 };
+  }
+
+  cart.totalAmount -= itemInCart.unitPrice * itemInCart.quantity;
+  // filtering the deleted item from items array in cart
+  const otherCartItems: ICartItem[] = cart.items.filter((item) => {
+    item.product.toString() !== productId;
+  });
+
+  cart.items = otherCartItems;
+
+  const updatedCart = await cart.save();
+
   return { data: updatedCart, statusCode: 200 };
 };

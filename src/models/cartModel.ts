@@ -1,7 +1,7 @@
 import { model, ObjectId, Schema } from "mongoose";
 import { IProduct } from "./productModel";
 
-interface ICartItem {
+export interface ICartItem {
   quantity: number;
   product: IProduct;
   unitPrice: number;

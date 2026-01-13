@@ -1,17 +1,8 @@
-import userModel from "../models/userModel";
+import userModel from "../../models/userModel";
 import bcrypt from "bcrypt";
-import { generateJWT } from "../auth/jwt";
+import { generateJWT } from "../../auth/jwt";
+import { LoginParams, RegisterParams } from "./interfaces";
 
-interface RegisterParams {
-  firstName: string;
-  lastName: string;
-  password: string;
-  email: string;
-}
-interface LoginParams {
-  email: string;
-  password: string;
-}
 
 export const register = async ({
   firstName,

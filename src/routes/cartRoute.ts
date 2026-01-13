@@ -2,8 +2,9 @@ import { Router } from "express";
 import {
   addItemToCart,
   getActiveCart,
+  removeItemfromCart,
   updateQuantityOfCartItem,
-} from "../services/cartServices";
+} from "../services/cart/cartServices";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { AuthRequest } from "../types/extendedRequest";
 
@@ -37,8 +38,6 @@ router.put("/items", authMiddleware, async (req: AuthRequest, res) => {
   const userId = req.user.userId;
   const { productId, quantity } = req.body;
 
-  console.log(productId, quantity);
-
   if (!productId || !quantity) {
     return res.status(400).send("productId and quantity are required");
   }
@@ -51,4 +50,22 @@ router.put("/items", authMiddleware, async (req: AuthRequest, res) => {
 
   res.status(response.statusCode).send(response.data);
 });
+
+// Delete item from the cart
+router.delete(
+  "/items/:productId",
+  authMiddleware,
+  async (req: AuthRequest, res) => {
+    const userId = req.user.userId;
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).send("productId is required");
+    }
+
+    const response = await removeItemfromCart({ userId, productId });
+    res.status(response.statusCode).send(response.data);
+  }
+);
+
 export default router;
