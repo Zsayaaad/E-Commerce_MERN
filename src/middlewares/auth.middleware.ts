@@ -19,6 +19,8 @@ export const authMiddleware = (
     return res.status(401).send("Invalid token format");
   }
 
+  
+
   try {
     const decodedToken = verifyToken(token);
     // { userId: '695f993be8e343ac451ac205', iat: 1768141168 }
