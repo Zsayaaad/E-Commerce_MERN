@@ -13,6 +13,10 @@ const port = 5000;
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  if (!req.body) req.body = {};
+  next();
+});
 
 mongoose
   .connect("mongodb://localhost:27017/ecommerce")

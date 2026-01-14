@@ -26,3 +26,8 @@ export interface RemoveItemFromCart {
 export interface ClearCart {
   userId: string;
 }
+
+export interface Checkout {
+  userId: string;
+  address: string;
+}

@@ -1,7 +1,9 @@
 import { cartModel, ICartItem } from "../../models/cartModel";
+import { IOrderItem, orderModel } from "../../models/orderModel";
 import productModel from "../../models/productModel";
 import {
   AddItemToCart,
+  Checkout,
   ClearCart,
   CreateCart,
   GetActiveCart,
@@ -195,4 +197,57 @@ export const clearCart = async ({ userId }: ClearCart) => {
   const emptyCart = await cart.save();
 
   return { data: emptyCart, statusCode: 200 };
+};
+
+/**
+ * Name: checkout
+ *
+ * Inputs:
+ * - userId: string
+ * - address: string
+ *
+ * Processes:
+ * - fetch cart from DB by userId
+ * - create orderItems
+ * - loop on cart.items to get each item
+ * - push each item in orderItems
+ *
+ * - get our order by making orderModel that will take it's object(userId, orderItems, total, address)
+ * - save the order in DB
+ * - update status of cart to be 'completed'
+ *
+ * Output:
+ * - order object
+ */
+export const checkout = async ({ userId, address }: Checkout) => {
+  const cart = await getActiveCart({ userId });
+
+  const orderItems: IOrderItem[] = [];
+  for (const item of cart.items) {
+    const product = await productModel.findById(item.product);
+    if (!product) {
+      return { data: "Product not found!", statusCode: 404 };
+    }
+
+    const orderItem: IOrderItem = {
+      productTitle: product.title,
+      productQuantity: item.quantity,
+      productPrice: item.unitPrice,
+      productImage: product.imageUrl,
+    };
+
+    orderItems.push(orderItem);
+  }
+
+  const order = await orderModel.create({
+    userId,
+    address,
+    orderItems,
+    total: cart.totalAmount,
+  });
+
+  cart.status = "completed";
+  await cart.save();
+
+  return { data: order, statusCode: 200 };
 };
