@@ -14,43 +14,55 @@ const router = Router();
 
 // GET cart
 router.get("/", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.userId;
+  try {
+    const userId = req.user.userId;
 
-  const activeCart = await getActiveCart({ userId });
+    const activeCart = await getActiveCart({ userId });
 
-  res.status(200).send(activeCart);
+    res.status(200).send(activeCart);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 // Add Items to cart
 router.post("/items", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.userId;
-  const { productId, quantity } = req.body;
+  try {
+    const userId = req.user.userId;
+    const { productId, quantity } = req.body;
 
-  if (!productId || !quantity) {
-    return res.status(400).send("productId and quantity are required");
+    if (!productId || !quantity) {
+      return res.status(400).send("productId and quantity are required");
+    }
+
+    const response = await addItemToCart({ userId, productId, quantity });
+
+    res.status(response.statusCode).send(response.data);
+  } catch (error) {
+    res.status(500).send(error);
   }
-
-  const response = await addItemToCart({ userId, productId, quantity });
-
-  res.status(response.statusCode).send(response.data);
 });
 
 // Update item quantity in cart
 router.put("/items", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.userId;
-  const { productId, quantity } = req.body;
+  try {
+    const userId = req.user.userId;
+    const { productId, quantity } = req.body;
 
-  if (!productId || quantity == null) {
-    return res.status(400).send("productId and quantity are required");
+    if (!productId || quantity == null) {
+      return res.status(400).send("productId and quantity are required");
+    }
+
+    const response = await updateQuantityOfCartItem({
+      userId,
+      productId,
+      quantity,
+    });
+
+    res.status(response.statusCode).send(response.data);
+  } catch (error) {
+    res.status(500).send(error);
   }
-
-  const response = await updateQuantityOfCartItem({
-    userId,
-    productId,
-    quantity,
-  });
-
-  res.status(response.statusCode).send(response.data);
 });
 
 // Delete item from the cart
@@ -58,38 +70,50 @@ router.delete(
   "/items/:productId",
   authMiddleware,
   async (req: AuthRequest, res) => {
-    const userId = req.user.userId;
-    const { productId } = req.params;
+    try {
+      const userId = req.user.userId;
+      const { productId } = req.params;
 
-    if (!productId) {
-      return res.status(400).send("productId is required");
+      if (!productId) {
+        return res.status(400).send("productId is required");
+      }
+
+      const response = await removeItemfromCart({ userId, productId });
+      res.status(response.statusCode).send(response.data);
+    } catch (error) {
+      res.status(500).send(error);
     }
-
-    const response = await removeItemfromCart({ userId, productId });
-    res.status(response.statusCode).send(response.data);
   }
 );
 
 // Clear all items from cart
 router.delete("/", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.userId;
+  try {
+    const userId = req.user.userId;
 
-  const response = await clearCart({ userId });
-  res.status(response.statusCode).send(response.data);
+    const response = await clearCart({ userId });
+    res.status(response.statusCode).send(response.data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 // Checkout from cart
 router.post("/checkout", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.userId;
-  const { address } = req.body;
+  try {
+    const userId = req.user.userId;
+    const { address } = req.body;
 
-  if (!address) {
-    return res.status(400).send("Address is required");
+    if (!address) {
+      return res.status(400).send("Address is required");
+    }
+
+    const response = await checkout({ userId, address });
+
+    res.status(response.statusCode).send(response.data);
+  } catch (error) {
+    res.status(500).send(error);
   }
-
-  const response = await checkout({ userId, address });
-
-  res.status(response.statusCode).send(response.data);
 });
 
 export default router;
