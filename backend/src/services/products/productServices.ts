@@ -10,8 +10,22 @@ export const seedInitialProducts = async () => {
       {
         title: "Dell Laptop",
         imageUrl:
-          "https://imgs.search.brave.com/cm6k4r6Gc0QkYF2ngwxe-DfHanOwKYjxpOZyH28kY9U/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFYeE1rQTdFQUwu/anBn",
+          "https://images.electronicexpress.com/product.c.405/569290-000.jpg",
         price: 35000,
+        stock: 10,
+      },
+      {
+        title: "Lenovo Laptop",
+        imageUrl:
+          "https://images.electronicexpress.com/product.c.405/571013-000.jpg",
+        price: 15000,
+        stock: 10,
+      },
+      {
+        title: "ASUS Laptop",
+        imageUrl:
+          "https://images.electronicexpress.com/product.c.405/571067-000.jpg",
+        price: 50000,
         stock: 10,
       },
     ];

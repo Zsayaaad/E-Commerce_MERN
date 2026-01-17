@@ -5,12 +5,14 @@ import userRoute from "./routes/userRoute";
 import cartRoute from "./routes/cartRoute";
 import productsRoute from "./routes/productsRoute";
 import { seedInitialProducts } from "./services/products/productServices";
+import cors from "cors";
 
 dotenv.config();
 
 const port = 5000;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
   if (!req.body) req.body = {};
