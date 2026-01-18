@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
       password,
     });
 
-    res.status(statusCode).send(data);
+    res.status(statusCode).json(data);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -26,7 +26,7 @@ router.post("/login", async (req, res) => {
 
     const { data, statusCode } = await login({ email, password });
 
-    res.status(statusCode).send(data);
+    res.status(statusCode).json(data);
   } catch (error) {
     res.status(500).send(error);
   }
