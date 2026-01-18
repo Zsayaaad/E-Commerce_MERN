@@ -1,11 +1,6 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useRef, useState } from "react";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "../context/Auth/AuthContext";
 
 const RegisterPage = () => {
   const [error, setError] = useState("");
@@ -15,11 +10,18 @@ const RegisterPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  const { login } = useContext(AuthContext);
+
   const onSubmit = async () => {
     const firstName = firstNameRef.current?.value;
     const lastName = lastNameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
+
+    if (!firstName || !lastName || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
 
     const response = await fetch(
       `${import.meta.env.VITE_BASE_URL}/user/register`,
@@ -29,17 +31,21 @@ const RegisterPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {
       setError("This email is already exist!, Try different credentials.");
       return;
     }
-    
-    const data = await response.json();
-    
-    console.log(data); // token of the user
+
+    const token = await response.json();
+    if (!token) {
+      setError("Token has not arrived");
+      return;
+    }
+
+    login(email, token);
   };
 
   return (
