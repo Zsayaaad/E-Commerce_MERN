@@ -4,6 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   _id: string;
@@ -13,6 +14,12 @@ interface Props {
 }
 
 export default function ProductCard({ title, imageUrl, price }: Props) {
+  const navigate = useNavigate();
+
+  const handleCart = () => {
+    navigate("/cart");
+  };
+
   return (
     <Card>
       <CardMedia sx={{ height: 300 }} image={imageUrl} title="green iguana" />
@@ -25,7 +32,7 @@ export default function ProductCard({ title, imageUrl, price }: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" size="small">
+        <Button variant="contained" size="small" onClick={handleCart}>
           Add to card
         </Button>
       </CardActions>
