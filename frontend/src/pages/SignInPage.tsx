@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Auth/AuthContext";
 import {
   Alert,
@@ -16,7 +16,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { login } = useContext(AuthContext);
 
@@ -44,7 +44,7 @@ const SignInPage = () => {
       const token = await response.json();
 
       login(email, token);
-      navigate('/')
+      navigate("/");
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
     }
@@ -91,6 +91,7 @@ const SignInPage = () => {
               type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
+
             <Button
               onClick={handleSubmit}
               variant="contained"
@@ -100,6 +101,15 @@ const SignInPage = () => {
             >
               Sign In
             </Button>
+            <Typography align="center">
+              Don't have an account yet?{" "}
+              <Link
+                to="/register"
+                style={{ textDecoration: "none", color: "#0062c4" }}
+              >
+                Register now
+              </Link>
+            </Typography>
           </Box>
         </Paper>
       </Box>

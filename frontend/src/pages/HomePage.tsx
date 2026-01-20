@@ -35,9 +35,9 @@ const HomePage = () => {
 
   return (
     <Container sx={{ mt: 6 }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         {products.map((p) => (
-          <Grid size={{ md: 4 }}>
+          <Grid key={p._id} size={{ xs: 8, sm: 6, md: 4 }}>
             <ProductCard {...p} />
           </Grid>
         ))}

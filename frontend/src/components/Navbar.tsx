@@ -109,7 +109,7 @@ function Navbar() {
                   </Menu>
                 </>
               ) : (
-                Button()
+                <Button />
               )}
             </Box>
           </Box>
