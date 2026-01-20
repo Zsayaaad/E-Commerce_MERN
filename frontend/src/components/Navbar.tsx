@@ -13,11 +13,14 @@ import { AuthContext } from "../context/Auth/AuthContext";
 import { useContext, useState } from "react";
 import { Grid } from "@mui/material";
 import Button from "./Buttons";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const { user, token } = useContext(AuthContext);
+  const { user, token, logout } = useContext(AuthContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -26,6 +29,12 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    handleCloseUserMenu()
+  }
 
   return (
     <AppBar position="static">
@@ -101,7 +110,7 @@ function Navbar() {
                         My Orders
                       </Typography>
                     </MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem onClick={handleLogout}>
                       <Typography sx={{ textAlign: "center" }}>
                         Logout
                       </Typography>
