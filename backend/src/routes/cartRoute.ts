@@ -83,7 +83,7 @@ router.delete(
     } catch (error) {
       res.status(500).send(error);
     }
-  }
+  },
 );
 
 // Clear all items from cart

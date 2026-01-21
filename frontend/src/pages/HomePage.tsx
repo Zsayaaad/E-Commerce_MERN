@@ -1,13 +1,8 @@
 import { Box, Container, Grid } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
+import type { Product } from "../types/product";
 
-interface Product {
-  _id: string;
-  imageUrl: string;
-  price: number;
-  title: string;
-}
 
 const HomePage = () => {
   const [products, setProducts] = useState<Product[]>([]);

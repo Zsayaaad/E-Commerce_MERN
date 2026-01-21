@@ -3,7 +3,7 @@ import { IProduct } from "./productModel";
 
 export interface ICartItem {
   quantity: number;
-  product: IProduct;
+  product: IProduct | ObjectId;
   unitPrice: number;
 }
 
