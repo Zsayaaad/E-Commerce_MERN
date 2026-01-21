@@ -11,13 +11,15 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { AuthContext } from "../context/Auth/AuthContext";
 import { useContext, useState } from "react";
-import { Badge, Grid } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartCheckoutOutlined";
-import Button from "./Buttons";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/Cart/CartContext";
+import SignInButton from "./Buttons";
 
 function Navbar() {
   const { user, token, logout } = useContext(AuthContext);
+  const { cartItems } = useContext(CartContext);
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -53,28 +55,34 @@ function Navbar() {
               width: "100%",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+            <Button
+              variant="text"
+              sx={{ color: "white" }}
+              onClick={() => navigate("/")}
             >
-              <AdbIcon sx={{ display: "flex", mr: 1 }} />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
+              <Box
                 sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                ELECTRONICS
-              </Typography>
-            </Box>
+                <AdbIcon sx={{ display: "flex", mr: 1 }} />
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  ELECTRONICS
+                </Typography>
+              </Box>
+            </Button>
 
             <Box
               sx={{
@@ -129,13 +137,13 @@ function Navbar() {
                     </MenuItem>
                   </Menu>
                   <IconButton aria-label="cart" onClick={handleCart}>
-                    <Badge badgeContent={4} color="secondary">
+                    <Badge badgeContent={cartItems.length} color="secondary">
                       <ShoppingCartIcon sx={{ color: "white" }} />
                     </Badge>
                   </IconButton>
                 </>
               ) : (
-                <Button />
+                <SignInButton />
               )}
             </Box>
           </Box>

@@ -4,7 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "../context/Cart/CartContext";
 
 interface Props {
   _id: string;
@@ -13,12 +14,9 @@ interface Props {
   price: number;
 }
 
-export default function ProductCard({ title, imageUrl, price }: Props) {
-  const navigate = useNavigate();
+export default function ProductCard({ _id, title, imageUrl, price }: Props) {
 
-  const handleCart = () => {
-    navigate("/cart");
-  };
+  const {addItemToCart} = useContext(CartContext)
 
   return (
     <Card>
@@ -32,7 +30,7 @@ export default function ProductCard({ title, imageUrl, price }: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" size="small" onClick={handleCart}>
+        <Button variant="contained" size="small" onClick={() => addItemToCart(_id)}>
           Add to card
         </Button>
       </CardActions>

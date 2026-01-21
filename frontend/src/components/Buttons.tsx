@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const Button = () => {
+const SignInButton = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -42,4 +42,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default Button;
+export default SignInButton;
