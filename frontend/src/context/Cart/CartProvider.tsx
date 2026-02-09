@@ -13,7 +13,7 @@ import { AuthContext } from "../Auth/AuthContext";
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
 
   const { token } = useContext(AuthContext);
 
@@ -147,6 +147,46 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const removeItem = async (productId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/cart/items/${productId}`,
+        {
+          method: "DELETE",
+          body: JSON.stringify({ productId }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.data || "Failed to delete the item from cart");
+        return;
+      }
+
+      const updatedCart = await response.json();
+
+      const mappedCartItems: CartItem[] = updatedCart.items.map(
+        (item: CartItemResponse) => ({
+          productId: item.product._id,
+          title: item.product.title,
+          imageUrl: item.product.imageUrl,
+          price: item.unitPrice,
+          quantity: item.quantity,
+          stock: item.product.stock,
+        }),
+      );
+
+      setCartItems(mappedCartItems);
+      setTotalAmount(updatedCart.totalAmount);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -154,6 +194,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         totalAmount,
         addItemToCart,
         updateQuantityOfCartItem,
+        removeItem,
       }}
     >
       {children}

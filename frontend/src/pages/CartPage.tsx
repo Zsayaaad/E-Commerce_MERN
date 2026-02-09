@@ -379,7 +379,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 const CartPage = () => {
   const [error, setError] = useState("");
 
-  const { cartItems, totalAmount, updateQuantityOfCartItem } =
+  const { cartItems, totalAmount, updateQuantityOfCartItem, removeItem } =
     useContext(CartContext);
 
   const handleQuantity = (
@@ -397,6 +397,12 @@ const CartPage = () => {
       return;
     }
     updateQuantityOfCartItem(productId, quantity);
+  };
+
+  const handleRemoveItem = (productId: string) => {
+    setError("");
+
+    removeItem(productId);
   };
 
   return (
@@ -450,7 +456,10 @@ const CartPage = () => {
               </ButtonGroup>
             </Box>
             <ButtonGroup size="small" aria-label="Small button group">
-              <Button sx={{ fontWeight: "bold", fontSize: "0.7rem" }}>
+              <Button
+                sx={{ fontWeight: "bold", fontSize: "0.7rem" }}
+                onClick={() => handleRemoveItem(item.productId)}
+              >
                 Remove Item
               </Button>
             </ButtonGroup>
@@ -468,7 +477,7 @@ const CartPage = () => {
         variant="h6"
         display={"flex"}
         justifyContent={"center"}
-        mt={5}
+        m={5}
       >
         Total = {totalAmount} EGP
       </Typography>
