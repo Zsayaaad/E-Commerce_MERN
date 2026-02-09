@@ -46,10 +46,14 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
             imageUrl: item.product.imageUrl,
             price: item.unitPrice,
             quantity: item.quantity,
+            stock: item.product.stock,
           }),
         );
 
+        // Update Items when page reloaded
         setCartItems(mappedCartItems);
+        // Update total amount when page reloaded
+        setTotalAmount(cart.totalAmount);
       } catch (error) {
         setError(error instanceof Error ? error.message : "An error occurred");
       }
@@ -73,7 +77,8 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       );
 
       if (!response.ok) {
-        setError("Failed to add to cart. Try again");
+        const errorData = await response.json();
+        setError(errorData.data || "Failed to add to cart. Try again");
         return;
       }
 
@@ -86,6 +91,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           imageUrl: item.product.imageUrl,
           price: item.unitPrice,
           quantity: item.quantity,
+          stock: item.product.stock,
         }),
       );
 
@@ -96,8 +102,60 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const updateQuantityOfCartItem = async (
+    productId: string,
+    quantity: number,
+  ) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/cart/items`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ productId, quantity }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(
+          errorData.data || "Failed to update quantity of the item in cart",
+        );
+        return;
+      }
+
+      const updatedCart = await response.json();
+
+      const mappedCartItems: CartItem[] = updatedCart.items.map(
+        (item: CartItemResponse) => ({
+          productId: item.product._id,
+          title: item.product.title,
+          imageUrl: item.product.imageUrl,
+          price: item.unitPrice,
+          quantity: item.quantity,
+          stock: item.product.stock,
+        }),
+      );
+
+      setCartItems(mappedCartItems);
+      setTotalAmount(updatedCart.totalAmount);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, totalAmount, addItemToCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        totalAmount,
+        addItemToCart,
+        updateQuantityOfCartItem,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

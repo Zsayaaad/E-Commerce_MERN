@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { Box, Container, Paper, Typography } from "@mui/material";
+import { useContext, useState } from "react";
+import { Alert, Box, Container, Paper, Typography } from "@mui/material";
 import { CartContext } from "../context/Cart/CartContext";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -377,11 +377,33 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 // `;
 
 const CartPage = () => {
-  const { cartItems, totalAmount } = useContext(CartContext);
+  const [error, setError] = useState("");
+
+  const { cartItems, totalAmount, updateQuantityOfCartItem } =
+    useContext(CartContext);
+
+  const handleQuantity = (
+    productId: string,
+    quantity: number,
+    stock: number,
+  ) => {
+    setError("");
+    if (quantity < 1) {
+      return;
+    }
+
+    if (quantity > stock) {
+      setError("Insufficient stock for the product");
+      return;
+    }
+    updateQuantityOfCartItem(productId, quantity);
+  };
 
   return (
     <Container sx={{ mt: 6, width: 800 }}>
       {/* <Grid container spacing={2} justifyContent="center"> */}
+      {error && <Alert severity="error">{error}</Alert>}
+
       {(cartItems ?? []).map((item) => (
         <Paper elevation={3} sx={{ p: 2, width: "100%", mb: 2 }}>
           <Box
@@ -401,8 +423,30 @@ const CartPage = () => {
 
               <Typography fontWeight="bold">{item.title}</Typography>
               <ButtonGroup size="small" aria-label="Small button group">
-                <Button sx={{ fontWeight: "bold" }}>+</Button>
-                <Button sx={{ fontWeight: "bold" }}>-</Button>
+                <Button
+                  sx={{ fontWeight: "bold" }}
+                  onClick={() =>
+                    handleQuantity(
+                      item.productId,
+                      item.quantity + 1,
+                      item.stock,
+                    )
+                  }
+                >
+                  +
+                </Button>
+                <Button
+                  sx={{ fontWeight: "bold" }}
+                  onClick={() =>
+                    handleQuantity(
+                      item.productId,
+                      item.quantity - 1,
+                      item.stock,
+                    )
+                  }
+                >
+                  -
+                </Button>
               </ButtonGroup>
             </Box>
             <ButtonGroup size="small" aria-label="Small button group">
@@ -410,17 +454,24 @@ const CartPage = () => {
                 Remove Item
               </Button>
             </ButtonGroup>
+
             <Box display="flex" flexDirection="column" alignItems="center">
               <Typography fontWeight="bold" margin={2}>
                 {item.price} x {item.quantity} EGP
-              </Typography>
-              <Typography fontWeight="bold">
-                Total = {totalAmount} EGP
               </Typography>
             </Box>
           </Box>
         </Paper>
       ))}
+      <Typography
+        fontWeight="bold"
+        variant="h6"
+        display={"flex"}
+        justifyContent={"center"}
+        mt={5}
+      >
+        Total = {totalAmount} EGP
+      </Typography>
       {/* </Grid> */}
     </Container>
   );
