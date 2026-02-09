@@ -139,9 +139,11 @@ export const updateQuantityOfCartItem = async ({
       return { data: "Insufficient stock for the product", statusCode: 400 };
     }
 
+    // IN COURSE HE USED FILTER FUNCTION TO GET OTHER ITEMS EXCEPT UPDATED ITEM
+    // AND USED REDUCE FUNCTION TO GET TOTAL AMOUNT OF THEM AND THAT MORE TIME COMPLEXITY
     // Remove the old price of the item from totalAmount
     cart.totalAmount -= itemInCart.unitPrice * itemInCart.quantity;
-    // Update the quantity & unitPrice
+    // Update the quantity
     itemInCart.quantity = quantity; // new quantity
     // Add the new price of the item to totalAmount
     cart.totalAmount += itemInCart.unitPrice * quantity; // new price

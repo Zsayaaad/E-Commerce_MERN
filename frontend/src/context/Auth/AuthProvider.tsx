@@ -7,7 +7,9 @@ const USER_KEY = "user";
 const TOKEN_KEY = "token";
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<string | null>(localStorage.getItem(USER_KEY));
+  const [user, setUser] = useState<string | null>(
+    localStorage.getItem(USER_KEY),
+  );
   const [token, setToken] = useState<string | null>(
     localStorage.getItem(TOKEN_KEY),
   );

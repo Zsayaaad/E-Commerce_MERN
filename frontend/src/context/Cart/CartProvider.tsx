@@ -32,6 +32,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         }
 
         const cart = await response.json();
+        // CART:
+        // _id
+        // userId
+        // status
+        // totalAmount
+        // items:Array (3)
 
         const mappedCartItems: CartItem[] = cart.items.map(
           (item: CartItemResponse) => ({
@@ -68,6 +74,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
       if (!response.ok) {
         setError("Failed to add to cart. Try again");
+        return;
       }
 
       const cart = await response.json();

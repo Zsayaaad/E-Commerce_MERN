@@ -4,11 +4,12 @@ import { AuthContext } from "../context/Auth/AuthContext";
 
 const ProtectedRoute = () => {
   const { token } = useContext(AuthContext);
-    
-    if(!token) {
-        return <Navigate to={"/login"}  />
-    }
 
+  if (!token) {
+    return <Navigate to={"/login"} />;
+  }
+
+  // Outlet is a component that renders the child routes
   return <Outlet />;
 };
 

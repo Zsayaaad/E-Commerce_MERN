@@ -1,8 +1,11 @@
-import { Box, Container, Grid } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
+
+import { Container, Grid } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
 import type { Product } from "../types/product";
-
 
 const HomePage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,9 +15,9 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/products`
+          `${import.meta.env.VITE_BASE_URL}/products`,
         );
-        const data = await response.json();
+        const data: Product[] = await response.json();
         setProducts(data);
       } catch {
         setError(true);
@@ -25,7 +28,14 @@ const HomePage = () => {
   }, []);
 
   if (error) {
-    return <Box>Something went wrong pls try again</Box>;
+    return (
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          Something went wrong pls try again.
+        </Alert>
+      </Stack>
+    );
   }
 
   return (

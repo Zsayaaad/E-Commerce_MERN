@@ -41,6 +41,10 @@ const RegisterPage = () => {
         {
           method: "POST",
           body: JSON.stringify({ firstName, lastName, email, password }),
+          /**
+           * With this headers: the server knows the body is JSON and can safely parse it
+           * (e.g. with express.json() or similar).
+           */
           headers: {
             "Content-Type": "application/json",
           },
@@ -57,7 +61,7 @@ const RegisterPage = () => {
       login(firstName, token);
       navigate("/");
     } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occured");
+      setError(error instanceof Error ? error.message : "An error occurred");
     }
   };
 
@@ -76,7 +80,7 @@ const RegisterPage = () => {
             Get started with ELECTRONICS
           </Typography>
 
-            {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
 
           <Box
             component={"form"}
