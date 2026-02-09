@@ -187,6 +187,31 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const clearCart = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/cart/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.data || "Failed to clear the cart");
+        return;
+      }
+
+      // const updatedCart = await response.json();
+
+      setCartItems([]);
+      setTotalAmount(0);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -195,6 +220,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         addItemToCart,
         updateQuantityOfCartItem,
         removeItem,
+        clearCart,
       }}
     >
       {children}
