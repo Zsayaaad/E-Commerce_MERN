@@ -7,6 +7,9 @@ import SignInPage from "./pages/SignInPage";
 import CartPage from "./pages/CartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { CartProvider } from "./context/Cart/CartProvider";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderSuccess from "./pages/OrderSuccess";
+import OrdersPage from "./pages/OrdersPage";
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
             <Route path="/login" element={<SignInPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/cart/checkout" element={<CheckoutPage />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/orders" element={<OrdersPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -15,10 +15,12 @@ import * as React from "react";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [error, setError] = useState("");
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const {
     cartItems,
@@ -66,6 +68,10 @@ const CartPage = () => {
     setOpen(false);
   };
 
+  const handleCheckout = () => {
+    navigate("/cart/checkout");
+  };
+
   const action = (
     <React.Fragment>
       <IconButton
@@ -88,12 +94,10 @@ const CartPage = () => {
         }}
       >
         <Button
+          size="small"
           variant="contained"
+          sx={{ mb: 2 }}
           onClick={() => handleClearCart()}
-          sx={{
-            fontSize: "0.6rem",
-            mb: 3,
-          }}
         >
           Clear Cart
         </Button>
@@ -165,10 +169,25 @@ const CartPage = () => {
         fontWeight="bold"
         variant="h6"
         display={"flex"}
-        justifyContent={"center"}
-        m={5}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        mt={2}
+        mb={5}
       >
-        Total = {totalAmount} EGP
+        <Stack spacing={2} direction="row">
+          <Button variant="text" sx={{ fontSize: "large", fontWeight: "bold" }}>
+            Total = {totalAmount.toFixed(2)} EGP
+          </Button>
+        </Stack>
+        <Button
+          variant="contained"
+          sx={{ fontSize: "small", fontWeight: "bold" }}
+          onClick={() => {
+            handleCheckout();
+          }}
+        >
+          Checkout
+        </Button>
       </Typography>
     </Box>
   );

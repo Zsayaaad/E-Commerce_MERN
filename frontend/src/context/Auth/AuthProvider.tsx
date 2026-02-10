@@ -1,5 +1,6 @@
 import { useState, type FC, type PropsWithChildren } from "react";
 import { AuthContext } from "./AuthContext";
+import type { Order } from "../../types/orders";
 
 // PROVIDER COMPONENT
 
@@ -13,6 +14,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem(TOKEN_KEY),
   );
+
+  const [orders, setOrders] = useState<Order[]>([]);
 
   const login = (user: string, token: string) => {
     setUser(user);
@@ -28,8 +31,40 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     localStorage.removeItem(TOKEN_KEY);
   };
 
+  const getOrders = async () => {
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/user/orders`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        console.error("Failed to fetch orders");
+        return;
+      }
+
+      const data = await response.json();
+
+      setOrders(data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, orders, login, logout, getOrders }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,5 +1,11 @@
 import express from "express";
-import { login, register } from "../services/user/userServices";
+import {
+  getOrdersByUserId,
+  login,
+  register,
+} from "../services/user/userServices";
+import { AuthRequest } from "../types/extendedRequest";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
@@ -27,6 +33,19 @@ router.post("/login", async (req, res) => {
     const { data, statusCode } = await login({ email, password });
 
     res.status(statusCode).json(data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+router.get("/orders", authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Fetch orders for the user
+    const { data: orders, statusCode } = await getOrdersByUserId(userId);
+
+    res.status(statusCode).json(orders);
   } catch (error) {
     res.status(500).send(error);
   }

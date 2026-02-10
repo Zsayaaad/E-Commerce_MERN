@@ -2,6 +2,7 @@ import userModel from "../../models/userModel";
 import bcrypt from "bcrypt";
 import { generateJWT } from "../../auth/jwt";
 import { LoginParams, RegisterParams } from "./interfaces";
+import { orderModel } from "../../models/orderModel";
 
 export const register = async ({
   firstName,
@@ -54,6 +55,19 @@ export const login = async ({ email, password }: LoginParams) => {
     }
 
     return { data: "Incorrect email or password!", statusCode: 400 };
+  } catch (error) {
+    return { data: error, statusCode: 500 };
+  }
+};
+
+export const getOrdersByUserId = async (userId: string) => {
+  try {
+    const order = await orderModel.find({ userId });
+
+    if (!order) {
+      return { data: "Order not found", statusCode: 404 };
+    }
+    return { data: order, statusCode: 200 };
   } catch (error) {
     return { data: error, statusCode: 500 };
   }
